@@ -207,14 +207,14 @@ void MyVector::reserve(const size_t capacity){
     bufArray = nullptr;
 }
 
-void MyVector::resize(const size_t size, const ValueType){
+void MyVector::resize(const size_t size, const ValueType value){
 	if(_str == ResizeStrategy::Multiplicative){
         if (_size == 0){
             _size = size;
             _capacity = _size * _coef;
             _data = new ValueType[_capacity];
             for (int i = 0; i < _size; i++){
-                _data[i] = 0;
+                _data[i] = value;
             }
         }
         else{
@@ -224,7 +224,7 @@ void MyVector::resize(const size_t size, const ValueType){
                     bufArray[i] = _data[i];
                 }
                 for (int j = _size; j < size; j++){
-                    bufArray[j] = 0;
+                    bufArray[j] = value;
                 }
                 delete[] _data;
                 _data = nullptr;
@@ -265,7 +265,7 @@ void MyVector::resize(const size_t size, const ValueType){
                 bufArray[i] = _data[i];
             }
             for(int j = _size; j < size;j++){
-                bufArray[j] = 0;
+                bufArray[j] = value;
             }
             _size = size;
             delete [] _data;
