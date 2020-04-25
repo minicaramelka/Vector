@@ -4,25 +4,33 @@
 
 using namespace std;
 
-MyVector::MyVector(size_t size, ResizeStrategy ResizeStrategy, float coef, size_t delta){
+MyVector::MyVector(size_t size, ResizeStrategy ResizeStrategy, float coef){
 	_size = size;
 	_capacity = 1;
 	_data = nullptr;
 	_str = ResizeStrategy;
     if (_str == ResizeStrategy::Additive){
-        _delta = delta;
+        _delta = coef;
+        while (loadFactor()>1){ 
+            _capacity = _capacity + _delta; 
+        } 
+        _data = new ValueType[_capacity]; 
     }
     if (_str == ResizeStrategy::Multiplicative){
         _coef = coef;
+        while (loadFactor() > 1){ 
+            _capacity = _capacity * _coef; 
+        } 
+        _data = new ValueType[_capacity]; 
     }
 }
 
-MyVector::MyVector(size_t size, ValueType value, ResizeStrategy ResizeStrategy, float coef, size_t delta){
+MyVector::MyVector(size_t size, ValueType value, ResizeStrategy ResizeStrategy, float coef){
 	_size = size;
 	_data = new ValueType[_capacity];
 	_str = ResizeStrategy;
     if (_str == ResizeStrategy::Additive){
-        _delta = delta;
+        _delta = coef;
         _capacity = _size + _delta;
     }
     if (_str == ResizeStrategy::Multiplicative){
@@ -91,11 +99,19 @@ float MyVector::loadFactor(){
 }
 
 void MyVector::pushBack(const ValueType& value){
+    if(_capacity > _size){
+        _size++;
+        _data[_size - 1] = value;
+    }
+    else{
 	resize(_size + 1);
 	_data[_size - 1] = value;
+    }
 }
 
 void MyVector::popBack(){
+    
+    
 	if (_size > 0){
 		resize(_size - 1);
 	}
@@ -400,12 +416,4 @@ MyVector sortedSquares(const MyVector& vec, SortedStrategy strategy){
 		}
 		return vec;
 	}
-}
-
-int main(){
-	MyVector m;
-	for (int j = -10; j <= 10; ++j)
-        m.pushBack(j);
-    for(int i = 0;i < m.size();i++)
-        cout<<m[i]<<" ";
 }
