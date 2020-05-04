@@ -390,30 +390,31 @@ long long int MyVector::find(const ValueType& value, bool isBegin) const{
 }
 
 MyVector sortedSquares(const MyVector& vec, SortedStrategy strategy){
-	size_t j = 0;
-	for (int i = 0; i < vec.size(); i++){
-		vec[i] = vec[i] * vec[i];
-	}
-	if (strategy == SortedStrategy::Up){
-		j = 0;
-		while (vec[j] >= vec[j + 1]){
-			swap(vec[j], vec[j + 1]);
-			j++;
-			if (j > vec.size() || vec[j + 1] >= vec[j]){
-				j = 0;
-			}
-		}
-		return vec;
-	}
-	if (strategy == SortedStrategy::Down){
-		j = vec.size() - 1;
-		while (vec[j] > vec[j - 1]){
-			swap(vec[j], vec[j - 1]);
-			j--;
-			if (j == 0 || vec[j - 1] >= vec[j]){
-				j = vec.size() - 1;
-			}
-		}
-		return vec;
-	}
+	MyVector bufArr(vec); 
+	for (int i = 0; i < vec.size(); i++) { 
+		bufArr[i] = bufArr[i] * bufArr[i]; 
+	} 
+	int j = bufArr.size() - 1; 
+	int i = 0; 
+	while(i<=j) { 
+		if (bufArr[i] > bufArr[j]) { 
+			if (strategy == SortedStrategy::Up) { 
+				vec[j-i] = bufArr[i]; 
+			} 
+			else { 
+				vec[bufArr.size() - j + i - 1] = bufArr[i]; 
+			} 
+			i++; 
+		} 
+		else { 
+			if (strategy == SortedStrategy::Up) { 
+				vec[j - i] = bufArr[j]; 
+			} 
+			else { 
+				vec[bufArr.size() - j + i - 1] = bufArr[j]; 
+			} 
+			j--; 
+		} 
+	} 
+	return vec;
 }
